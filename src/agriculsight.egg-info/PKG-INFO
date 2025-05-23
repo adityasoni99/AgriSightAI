@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: agriculsight
+Version: 0.1.0
+Summary: AgriSight: Multi-Agent Decision Support System for Precision Agriculture
+Classifier: Programming Language :: Python
+Requires-Python: <3.13,>=3.11
+Requires-Dist: aiqtoolkit[agno]
+Requires-Dist: streamlit~=1.36.0
+Requires-Dist: pillow~=10.2.0
+Requires-Dist: numpy~=1.26.4
+Requires-Dist: pandas~=2.2.1
+Requires-Dist: matplotlib~=3.9.3
+Requires-Dist: opencv-python~=4.9.0.80

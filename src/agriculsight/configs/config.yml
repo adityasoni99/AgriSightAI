@@ -1,0 +1,44 @@
+general:
+  use_uvloop: true
+  logging:
+    console:
+      _type: console
+      level: DEBUG
+
+  front_end:
+    _type: console
+
+functions:
+  image_processing_tool:
+    _type: image_processing_tool
+    # Optional model path can be specified here
+    # model_path: "path/to/model"
+
+  soil_analysis_tool:
+    _type: soil_analysis_tool
+    # Optional API key can be specified here
+    # api_key: "your_api_key_here"
+
+  agriculsight:
+    _type: agriculsight
+    llm_name: nim_llm
+    image_processing_tool: image_processing_tool
+    soil_analysis_tool: soil_analysis_tool
+    api_key: "some-dummy-key" # Replace with your actual NVIDIA API key in production
+
+llms:
+  nim_llm:
+    _type: nim
+    model_name: meta/llama-3.1-70b-instruct
+    max_token: 2048
+    temperature: 0.1
+
+workflow:
+  _type: agriculsight
+  tool_names: [agriculsight]
+  llm_name: nim_llm
+  image_processing_tool: image_processing_tool
+  soil_analysis_tool: soil_analysis_tool
+  verbose: true
+  retry_parsing_errors: true
+  max_retries: 3

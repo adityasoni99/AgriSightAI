@@ -1,0 +1,22 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools >= 64"]
+
+[project]
+name = "agriculsight"
+version = "0.1.0"
+dependencies = [
+  "aiqtoolkit[agno]",
+  "streamlit~=1.36.0",
+  "pillow~=10.2.0",
+  "numpy~=1.26.4",
+  "pandas~=2.2.1",
+  "matplotlib~=3.9.3",
+  "opencv-python~=4.9.0.80"
+]
+requires-python = ">=3.11,<3.13"
+description = "AgriSight: Multi-Agent Decision Support System for Precision Agriculture"
+classifiers = ["Programming Language :: Python"]
+
+[project.entry-points.'aiq.components']
+agriculsight = "agriculsight.register"

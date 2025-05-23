@@ -1,0 +1,13 @@
+pyproject.toml
+src/agriculsight/__init__.py
+src/agriculsight/agriculsight_function.py
+src/agriculsight/register.py
+src/agriculsight.egg-info/PKG-INFO
+src/agriculsight.egg-info/SOURCES.txt
+src/agriculsight.egg-info/dependency_links.txt
+src/agriculsight.egg-info/entry_points.txt
+src/agriculsight.egg-info/requires.txt
+src/agriculsight.egg-info/top_level.txt
+src/agriculsight/tools/__init__.py
+src/agriculsight/tools/image_processing.py
+src/agriculsight/tools/soil_analysis.py
