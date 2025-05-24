@@ -34,13 +34,13 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
           │                           │                           │
           │                           │                           │
 ┌─────────▼────────────┐    ┌─────────▼─────────────┐   ┌─────────▼─────────┐
-│   Sensor Interface   │    │                       │   │   Document Store   │
-│   - Camera Data      │    │                       │   │   - Research       │
-│   - IoT Devices      │───►│                       │◄──│   - Best Practices │
-│   - Weather APIs     │    │                       │   │   - Historical Data│
+│   Sensor Interface   │    │                       │   │  Document Store   │
+│   - Camera Data      │    │                       │   │  - Research       │
+│   - IoT Devices      │───►│                       │◄──│  - Best Practices │
+│   - Weather APIs     │    │                       │   │  - Historical Data│
 └──────────────────────┘    │                       │   └───────────────────┘
                             │                       │
-┌──────────────────────┐    │    Agent Network     │   ┌───────────────────┐
+┌──────────────────────┐    │    Agent Network      │   ┌───────────────────┐
 │  Image Processing    │    │                       │   │  Vector Database  │
 │  - NVIDIA TensorRT   │───►│                       │◄──│  - Embeddings     │
 │  - Computer Vision   │    │                       │   │  - Semantic Search│
@@ -57,9 +57,9 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
                             │    User Interface     │
                             └───────────────────────┘
                                       │
-                ┌───────────────────┐ │ ┌─────────────────────┐
+                ┌───────────────────┐ │  ┌─────────────────────┐
                 │  Mobile Interface │◄┴─►│  Dashboard/Web App  │
-                └───────────────────┘   └─────────────────────┘
+                └───────────────────┘    └─────────────────────┘
 ```
 
 ## ✨ Key Features
