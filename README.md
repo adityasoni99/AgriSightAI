@@ -18,6 +18,7 @@ AgriSightAI is an innovative multi-agent system that revolutionizes precision ag
 
 AgriSightAI integrates with existing farm equipment and IoT devices, processes multi-modal data (images, sensor readings, historical records), and employs RAG workflows to incorporate domain knowledge from agricultural research. The system's modular architecture allows for flexible deployment across different scales - from small farms to large agricultural operations.
 
+
 ## 🏗️ Architecture
 
 ```
@@ -34,13 +35,13 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
           │                           │                           │
           │                           │                           │
 ┌─────────▼────────────┐    ┌─────────▼─────────────┐   ┌─────────▼─────────┐
-│   Sensor Interface   │    │                       │   │   Document Store   │
-│   - Camera Data      │    │                       │   │   - Research       │
-│   - IoT Devices      │───►│                       │◄──│   - Best Practices │
-│   - Weather APIs     │    │                       │   │   - Historical Data│
+│   Sensor Interface   │    │                       │   │  Document Store   │
+│   - Camera Data      │    │                       │   │  - Research       │
+│   - IoT Devices      │───►│                       │◄──│  - Best Practices │
+│   - Weather APIs     │    │                       │   │  - Historical Data│
 └──────────────────────┘    │                       │   └───────────────────┘
                             │                       │
-┌──────────────────────┐    │    Agent Network     │   ┌───────────────────┐
+┌──────────────────────┐    │    Agent Network      │   ┌───────────────────┐
 │  Image Processing    │    │                       │   │  Vector Database  │
 │  - NVIDIA TensorRT   │───►│                       │◄──│  - Embeddings     │
 │  - Computer Vision   │    │                       │   │  - Semantic Search│
@@ -57,9 +58,9 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
                             │    User Interface     │
                             └───────────────────────┘
                                       │
-                ┌───────────────────┐ │ ┌─────────────────────┐
+                ┌───────────────────┐ │  ┌─────────────────────┐
                 │  Mobile Interface │◄┴─►│  Dashboard/Web App  │
-                └───────────────────┘   └─────────────────────┘
+                └───────────────────┘    └─────────────────────┘
 ```
 
 ## ✨ Key Features
@@ -88,6 +89,8 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
 - Field mapping with issue overlays
 - Time-series data visualization
 - Action prioritization interface
+
+This project is built as a Minimum Viable Product (MVP) during a hackathon, showcasing the potential of multi-agent AI in agriculture. While the current implementation demonstrates core functionalities, several advanced capabilities needs to be developed using the technology stack mentioned for continued development.
 
 ## 🚀 Getting Started
 
@@ -137,8 +140,7 @@ streamlit run streamlit_app.py
 ### Additional Technologies
 - **Backend**: FastAPI, Redis, PostgreSQL, Milvus/FAISS
 - **Frontend**: Streamlit, React.js with Material UI
-- **ML/AI**: PyTorch, Langchain, Hugging Face Transformers
-- **DevOps**: Docker, Kubernetes, GitHub Actions, Prometheus + Grafana
+- **ML/AI**: PyTorch, Agno, Hugging Face Transformers
 
 ## 📂 Project Structure
 
@@ -177,5 +179,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgements
 
 - This project was developed as part of a hackathon focused on NVIDIA's Agent Intelligence toolkit.
+
+![AgriSightAI](https://github.com/user-attachments/assets/0f18160a-f6ee-4798-b0a7-54a02d02017a)
+
 - Special thanks to the NVIDIA team for providing the tools and resources to build this system.
 - Agricultural research resources that informed our knowledge base.
