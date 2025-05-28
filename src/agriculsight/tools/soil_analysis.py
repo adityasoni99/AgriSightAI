@@ -5,7 +5,6 @@ from typing import Optional, Dict, Any, List, AsyncIterator
 from aiq.data_models.function import FunctionBaseConfig
 from pydantic import BaseModel, Field
 import numpy as np
-import json
 
 from aiq.builder.function_info import FunctionInfo
 from aiq.builder.builder import Builder
@@ -18,6 +17,16 @@ class SoilAnalysisToolConfig(FunctionBaseConfig, name="soil_analysis_tool"):
     """
     api_key: Optional[str] = Field(None, description="API key for soil data service")
     data_dir: Optional[str] = Field(None, description="Directory with local soil data")
+
+
+class SoilAnalysisArgs(BaseModel):
+    """Schema for soil analysis arguments."""
+    location: Optional[str] = Field(None, description="Location or field identifier to analyze")
+    analysis_type: str = Field(
+        "moisture",
+        description="Type of analysis: 'moisture', 'nutrients', 'ph', 'comprehensive'"
+    )
+    date_range: Optional[str] = Field(None, description="Date range for historical analysis")
 
 
 @register_function(config_type=SoilAnalysisToolConfig)
@@ -55,7 +64,11 @@ async def soil_analysis_tool(config: SoilAnalysisToolConfig, builder: Builder):
         # For demo purposes, return mock data
         return generate_mock_soil_data(location, analysis_type, date_range)
 
-    yield FunctionInfo.from_fn(_analyze_soil, description="Analyze soil conditions for agricultural decision-making")
+    yield FunctionInfo.from_fn(
+        _analyze_soil,
+        description="Analyze soil conditions for agricultural decision-making",
+        input_schema=SoilAnalysisArgs
+    )
 
 
 def generate_mock_soil_data(location: str, analysis_type: str, date_range: Optional[str] = None) -> Dict[str, Any]:

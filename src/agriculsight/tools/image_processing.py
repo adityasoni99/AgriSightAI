@@ -3,13 +3,10 @@
 import os
 import cv2
 import numpy as np
-from typing import Optional, Dict, Any, List, AsyncIterator
+from typing import Optional, Dict, Any
 
 from aiq.data_models.function import FunctionBaseConfig
 from pydantic import BaseModel, Field
-import base64
-from PIL import Image
-from io import BytesIO
 
 from aiq.builder.function_info import FunctionInfo
 from aiq.builder.builder import Builder
@@ -21,6 +18,17 @@ class ImageProcessingToolConfig(FunctionBaseConfig, name="image_processing_tool"
     Configuration for the image processing tool.
     """
     model_path: Optional[str] = Field(None, description="Path to the image classification model")
+    default_image_path: Optional[str] = Field("./sample_images/corn-field.jpg")
+    description: Optional[str] = "Use this tool for any image processing tasks."
+
+
+class ImageProcessingArgs(BaseModel):
+    """Schema for image processing arguments."""
+    image_path: Optional[str] = Field(None, description="URL or path to the image to analyze")
+    task: str = Field(
+        "health_assessment",
+        description="Task to perform: 'health_assessment', 'disease_detection', 'weed_identification'"
+    )
 
 
 @register_function(config_type=ImageProcessingToolConfig)
@@ -28,7 +36,7 @@ async def image_processing_tool(config: ImageProcessingToolConfig, builder: Buil
     """Register the image processing tool function."""
 
     async def _process_image(
-            image_url: str = Field(..., description="URL or path to the image to analyze"),
+            image_path: str = Field(..., description="Path to the image to analyze"),
             task: str = Field(
                 "health_assessment",
                 description="Task to perform: 'health_assessment', 'disease_detection', 'weed_identification'"
@@ -39,25 +47,29 @@ async def image_processing_tool(config: ImageProcessingToolConfig, builder: Buil
         disease detection, and weed identification.
 
         Args:
-            image_url: Path or URL to the image to analyze
+            image_path: Path or URL to the image to analyze
             task: Type of analysis to perform
 
         Returns:
             Dictionary containing analysis results
         """
         try:
+            if image_path is None:
+                image_path = config.default_image_path
+
+            print(f"Image processing tool called with image_url: {image_path}, task: {task}")
             # Ensure image_url is a string
-            if not isinstance(image_url, str):
+            if not isinstance(image_path, str):
                 return {
                     "success": False,
                     "error": "Invalid image_url type",
-                    "message": "image_url must be a string"
+                    "message": f"image_path must be a string {image_path}"
                 }
 
             # Load and preprocess image
-            if os.path.exists(image_url):
+            if os.path.exists(image_path):
                 # Load local file
-                img = cv2.imread(image_url)
+                img = cv2.imread(image_path)
             else:
                 # For demo purposes, return mock data when real images aren't available
                 return generate_mock_result(task)
@@ -92,7 +104,19 @@ async def image_processing_tool(config: ImageProcessingToolConfig, builder: Buil
                 "message": "An error occurred during image processing"
             }
 
-    yield FunctionInfo.from_fn(_process_image, description="Process agricultural images for crop analysis")
+    yield FunctionInfo.from_fn(
+        _process_image,
+        description="""This tool processes agricultural images for crop analysis and returns relevant results for the given task.
+
+            Args:
+                image_url (Optional[str]): The path of the agricultural image. If None, mock data will be used.
+                task (str): The kind of analysis to perform. Must be either "health_assessment", "disease_detection", or "weed_identification"
+
+            Returns:
+                Dict[str, Any]: Analysis results or error message
+            """,
+        input_schema=ImageProcessingArgs
+    )
 
 
 def generate_mock_result(task: str) -> Dict[str, Any]:

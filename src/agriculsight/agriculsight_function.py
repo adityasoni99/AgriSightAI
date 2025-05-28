@@ -1,7 +1,10 @@
 import logging
 import os
+import re
 from typing import Optional, AsyncIterator
 
+import PIL
+from PIL import Image
 from agno.memory import AgentMemory
 from aiq.builder.framework_enum import LLMFrameworkEnum
 from aiq.data_models.component_ref import LLMRef
@@ -77,6 +80,10 @@ async def agriculsight_function(
                    You are an expert agricultural vision analyst. Given crop imagery, you can identify crop health 
                    issues, detect diseases, assess growth stages, and provide detailed analysis of visual patterns
                    that indicate problems or opportunities in agricultural fields.
+
+                   When analyzing images, you should extract any image paths from the user's query and pass them 
+                   to the image_processing_tool. If no image path is found, you can still use the tool without 
+                   providing an image_url parameter, and it will return analysis based on available data
                    """),
         instructions=[
             "Analyze crop imagery to identify signs of nutrient deficiencies, water stress, or disease",
@@ -84,6 +91,10 @@ async def agriculsight_function(
             "Identify areas of a field that may require special attention",
             "Provide confidence scores for detected issues",
             "Suggest potential causes for observed problems",
+            "When using image_processing_tool, extract image paths from user queries when available",
+            "If an image path is mentioned, pass it as the image_url parameter to image_processing_tool to perform most relevant task as per user's query out 'health_assessment', 'disease_detection', 'weed_identification'"
+            "**The _process_image function of image_processing_tool requires a specific format: _process_image(image_path='image path value', task='health_assessment')**"
+            "Use must this format precisely."
         ],
         tools=[t for t in tools if 'image' in t.name.lower()],
         add_datetime_to_instructions=True,
@@ -106,6 +117,9 @@ async def agriculsight_function(
             "Identify areas with suboptimal environmental conditions",
             "Suggest adjustments to irrigation or fertilization based on environmental data",
             "Predict potential environmental risks based on current conditions and forecasts",
+            "Use soil_processing_tool to perform most relevant analysis as per user's query out of 'moisture', 'ph', 'nutrients', 'comprehensive'",
+            "**The _analyze_soil function of soil_analysis_tool requires a specific format: _analyze_soil(location='location of field', analysis_type='moisture')**"
+            "Use must this format precisely."
         ],
         tools=[t for t in tools if 'soil' in t.name.lower() or 'weather' in t.name.lower()],
         add_datetime_to_instructions=True,
@@ -158,7 +172,8 @@ async def agriculsight_function(
         model=llm,
         memory=shared_memory,
         description=dedent("""\
-                You are an agricultural strategy expert. Your role is to synthesize insights from 
+                You are an agricultural strategy expert. Your role is to create a plan and strategy
+                to answer a user question. You can synthesize insights from
                 vision analysis and environmental data to provide actionable recommendations.
                 Consider both immediate interventions and long-term strategies for sustainable farming.
                 Prioritize recommendations based on urgency and potential impact.
@@ -181,6 +196,14 @@ async def agriculsight_function(
             inputs : user query
         """
         try:
+            # Extract image path if present in the input
+            image_path = None
+            path_match = re.search(r"['\"]([^'\"]+\.(jpg|jpeg|png|gif|bmp))['\"]", inputs)
+            if path_match:
+                potential_path = path_match.group(1)
+                logger.info(f"Extracted potential image path from input: {potential_path}")
+                image_path = potential_path
+
             # Create a team of agents
             team = [vision_agent, env_agent, strategy_agent]
 
@@ -207,6 +230,10 @@ async def agriculsight_function(
 
             Provide confidence scores for each detected issue and suggest potential causes.
             """
+
+            # If we extracted an image path, add it explicitly to the vision input
+            if image_path:
+                vision_input += f"\n\nIMPORTANT: Use the image_processing_tool with this IMAGE PATH: {image_path}"
 
             # Have vision agent analyze any imagery mentioned
             vision_result = await vision_agent.arun(vision_input, stream=False)

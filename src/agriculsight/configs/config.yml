@@ -11,6 +11,7 @@ general:
 functions:
   image_processing_tool:
     _type: image_processing_tool
+    default_image_path: "./sample_images/corn-field.jpg"
     # Optional model path can be specified here
     # model_path: "path/to/model"
 

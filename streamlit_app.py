@@ -1,10 +1,13 @@
+import shutil
+import tempfile
+
 import streamlit as st
 import subprocess
 import re
 import os
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
 from PIL import Image
 
 st.set_page_config(
@@ -92,11 +95,30 @@ with tab1:
             # Set the API key to environment variable
             os.environ["NVIDIA_API_KEY"] = api_key
 
-            # Set env vars
-            os.environ["NVIDIA_API_KEY"] = api_key
+            # Prepare config path and file modification
+            config_path = "src/agriculsight/configs/config.yml"
+            temp_dir = tempfile.mkdtemp()
+            temp_config_path = os.path.join(temp_dir, "config_temp.yml")
 
-            # Create the command to run the AgriSight analysis
-            cmd = f'aiq run --config_file src/agriculsight/configs/config.yml --input "{query} Image: {uploaded_file}"'
+            # Load and modify config
+            with open(config_path, 'r') as f:
+                config = yaml.safe_load(f)
+
+            if uploaded_file:
+                # Save uploaded file to temp and update config
+                image_save_path = os.path.join("./sample_images/", uploaded_file.name)
+                with open(image_save_path, 'wb') as out_file:
+                    out_file.write(uploaded_file.getbuffer())
+
+                # Update default_image_path
+                config["functions"]["image_processing_tool"]["default_image_path"] = image_save_path
+
+            # Write updated config to temp file
+            with open(temp_config_path, 'w') as f:
+                yaml.dump(config, f)
+
+            # Build command with updated config path to run the AgriSight analysis
+            cmd = f'aiq run --config_file {temp_config_path} --input "{query} Image: {image_save_path}"'
 
             try:
                 st.info(
@@ -162,6 +184,9 @@ with tab1:
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+
+            finally:
+                shutil.rmtree(temp_dir)
 
 with tab2:
     st.markdown("<div class='sub-header'>Agricultural Data Visualization</div>", unsafe_allow_html=True)

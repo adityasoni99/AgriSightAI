@@ -12,7 +12,9 @@ dependencies = [
   "numpy~=1.26.4",
   "pandas~=2.2.1",
   "matplotlib~=3.9.3",
-  "opencv-python~=4.9.0.80"
+  "opencv-python~=4.9.0.80",
+  "litellm~=1.70.2",
+  "langgraph~=0.2.76"
 ]
 requires-python = ">=3.11,<3.13"
 description = "AgriSight: Multi-Agent Decision Support System for Precision Agriculture"
