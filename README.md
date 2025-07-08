@@ -92,6 +92,8 @@ AgriSightAI integrates with existing farm equipment and IoT devices, processes m
 
 This project is built as a Minimum Viable Product (MVP) during a hackathon, showcasing the potential of multi-agent AI in agriculture. While the current implementation demonstrates core functionalities, several advanced capabilities needs to be developed using the technology stack mentioned for continued development.
 
+https://www.youtube.com/watch?v=7a6EpbnzQqk
+
 ## 🚀 Getting Started
 
 ### Prerequisites
